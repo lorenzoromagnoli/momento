@@ -67,22 +67,14 @@ app.post('/api/photo',function(req,res){
 
 var printFile=function(filename){
   exec("lp "+filename+" -o media='Postcard(4x6in)_Type2.FullBleed'",
-  (err, stdout, stderr) => {
+  function(err, stdout, stderr) {
     if (err ){
       console.error(err);
       return;
     }
     console.log(stdout);
-
   });
 
-  exec('my.bat', (err, stdout, stderr) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  console.log(stdout);
-});
 
 }
 
