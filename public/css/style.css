@@ -2,3 +2,18 @@ form{
   margin: auto;
   padding: 20px;
 }
+
+img{
+  width: 100%;
+}
+
+body{
+  background-color: #c2b280;
+  /*background-image: url(../assets/emojii.png);*/
+}
+
+p{
+  text-align: center;
+}
+
+p, input{display:inline-block}

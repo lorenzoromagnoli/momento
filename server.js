@@ -2,24 +2,60 @@ var express = require('express');
 var multer  = require('multer');
 var jade = require('jade');
 var fs = require('fs');
+// var PDFDocument=require ('pdfkit');
 const exec = require('child_process').exec;
 
-var leds = require("rpi-ws2801");
-// connecting to SPI
-leds.connect(32); // number of LEDs
+var QRCode = require('qrcode');
+
+// QRCode.toDataURL('i am a pony!',function(err,url){
+//     console.log(url);
+// });
+// QRCode.save('public/qr/qr.png','i am a pony!',function(err,url){
+//     console.log(url);
+// });
+
+
+PDFDocument = require ('pdfkit')
+
+
+
+var showRandomFile=function(req, res){
+  fs.readdir("public/uploads", function(err,files){
+    filesNumber=files.length;
+    var randomfile=Math.round((Math.random() * files.length-1));
+    res.render('getData',{ image: files[randomfile] });
+  })
+}
+var printRandomFile=function(){
+  fs.readdir("public/qr", function(err,files){
+    filesNumber=files.length;
+    var randomfile=Math.round((Math.random() * files.length-1));
+    printFile("public/qr/"+files[randomfile]);
+  })
+}
 
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, './public/uploads');
   },
   filename: function (req, file, callback) {
-
     callback(null,file.originalname);
   }
 });
 var upload = multer({ storage : storage}).single('userPhoto');
 
 
+var createPDF=function(imagePath){
+
+  doc = new PDFDocument
+  doc.pipe (fs.createWriteStream('public/qr/'+imagePath+'.pdf'));
+
+   doc.image("public/uploads/"+imagePath, 0, 0);
+   doc.image("public/assets/emojii.png", 10, 500);
+
+   doc.end();
+
+}
 
 
 var app = express()
@@ -39,21 +75,7 @@ app.get('/', function(req, res){
   }
 });
 app.get('/photo', function(req, res){
-  fs.readdir("public/uploads", function(err,files){
-    console.log(files);
-    var randomfile=Math.round((Math.random() * files.length));
-    console.log(randomfile);
-    console.log (files[randomfile]);
-
-    leds.fill(0xFF, 255, 0x00);
-    leds.update();
-    setTimeout(function(){
-      leds.fill(0x00, 0x00, 0x00);
-    },2000);
-
-    res.render('getData',{ image: files[randomfile] });
-    printFile("public/uploads/"+files[randomfile]);
-  })
+  showRandomFile(req, res);
 });
 
 
@@ -69,7 +91,12 @@ app.post('/api/photo',function(req,res){
         if(err) {
             return res.end("Error uploading file.");
         }
-        res.end("File is uploaded");
+
+        printRandomFile();
+        showRandomFile(req, res);
+        console.log(req.file.filename);
+        var filename=req.file.filename;
+        createPDF(filename);
     });
 });
 
@@ -83,8 +110,15 @@ var printFile=function(filename){
     }
     console.log(stdout);
   });
+}
 
-
+var blinkLed=function(){
+  leds.fill(0xFF, 255, 0x00);
+  leds.update();
+  setTimeout(function(){
+    leds.fill(0x00, 0x00, 0x00);
+    leds.update();
+  },2000);
 }
 
 

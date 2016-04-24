@@ -5,9 +5,7 @@ html
 			.row
 				.col-md-4.col-sm-6.col-xs-12.col-md-offset-4
 					form(method="post",enctype="multipart/form-data",action="/api/photo")
-						p
-							input(type="text",name="title",placeholder="title")
-						p
-							input(type="file",name="userPhoto", accept="image/*")
-						p
-							input(type="submit")
+						.row.btn.btn-default.btn-file
+							input(type="file",name="userPhoto", accept="image/*",multiple="multiple").form-control
+						.row
+							input(type="submit").btn.btn-primary
