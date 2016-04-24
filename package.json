@@ -8,7 +8,8 @@
     "express": "~4.0.0",
     "jade": "^1.11.0",
     "multer": "1.1.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "rpi-ws2801": "0.0.4"
   },
   "devDependencies": {},
   "scripts": {},

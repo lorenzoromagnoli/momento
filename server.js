@@ -4,6 +4,9 @@ var jade = require('jade');
 var fs = require('fs');
 const exec = require('child_process').exec;
 
+var leds = require("rpi-ws2801");
+// connecting to SPI
+leds.connect(32); // number of LEDs
 
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
@@ -41,6 +44,13 @@ app.get('/photo', function(req, res){
     var randomfile=Math.round((Math.random() * files.length));
     console.log(randomfile);
     console.log (files[randomfile]);
+
+    leds.fill(0xFF, 255, 0x00);
+    leds.update();
+    setTimeout(function(){
+      leds.fill(0x00, 0x00, 0x00);
+    },2000);
+
     res.render('getData',{ image: files[randomfile] });
     printFile("public/uploads/"+files[randomfile]);
   })
