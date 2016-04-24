@@ -30,6 +30,7 @@ var printRandomFile=function(){
   fs.readdir("public/qr", function(err,files){
     filesNumber=files.length;
     var randomfile=Math.round((Math.random() * files.length-1));
+    console.log(files);
     printFile("public/qr/"+files[randomfile]);
   })
 }
@@ -47,7 +48,10 @@ var upload = multer({ storage : storage}).single('userPhoto');
 
 var createPDF=function(imagePath){
 
-  doc = new PDFDocument
+  doc = new PDFDocument({
+  layout: 'landscape',
+  size: [200, 350] // a smaller document for small badge printers
+});
   doc.pipe (fs.createWriteStream('public/qr/'+imagePath+'.pdf'));
 
    doc.image("public/uploads/"+imagePath, 0, 0);
@@ -102,7 +106,8 @@ app.post('/api/photo',function(req,res){
 
 
 var printFile=function(filename){
-  exec("lp "+filename+" -o media='Postcard(4x6in)_Type2.FullBleed'",
+  console.log (filename);
+  exec("lp '"+filename+"' -o media='Postcard(4x6in)_Type2.FullBleed' -o fit-to-page",
   function(err, stdout, stderr) {
     if (err ){
       console.error(err);
