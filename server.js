@@ -48,10 +48,7 @@ var upload = multer({ storage : storage}).single('userPhoto');
 
 var createPDF=function(imagePath){
 
-  doc = new PDFDocument({
-  layout: 'landscape',
-  size: [200, 350] // a smaller document for small badge printers
-});
+  doc = new PDFDocument
   doc.pipe (fs.createWriteStream('public/qr/'+imagePath+'.pdf'));
 
    doc.image("public/uploads/"+imagePath, 0, 0);
