@@ -2,7 +2,6 @@ var express = require('express');
 var multer  = require('multer');
 var jade = require('jade');
 var fs = require('fs');
-var printer = require('printer');
 const exec = require('child_process').exec;
 
 
