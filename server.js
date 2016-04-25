@@ -48,10 +48,13 @@ var upload = multer({ storage : storage}).single('userPhoto');
 
 var createPDF=function(imagePath){
 
-  doc = new PDFDocument
+  doc = new PDFDocument({
+  layout: 'portrait',
+  size: [1200, 1800] // a smaller document for small badge printers
+});
   doc.pipe (fs.createWriteStream('public/qr/'+imagePath+'.pdf'));
 
-   doc.image("public/uploads/"+imagePath, 0, 0);
+   doc.image("public/uploads/"+imagePath, 0, 0, {width: 1200});
    doc.image("public/assets/emojii.png", 10, 500);
 
    doc.end();
