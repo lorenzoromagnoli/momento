@@ -8,8 +8,9 @@ img{
 }
 
 body{
-  background-color: #c2b280;
+    /*background-color: #c2b280;*/
   /*background-image: url(../assets/emojii.png);*/
+  padding: 50px;
 }
 
 p{
@@ -17,3 +18,29 @@ p{
 }
 
 p, input{display:inline-block}
+
+.maino {
+    vertical-align: middle;
+    float: none;
+    margin-top: 4%;
+    margin: auto;
+
+}
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+.row{
+  margin-bottom: 20px;
+}
+.btn{
+  margin: auto;
+width: 100%;
+}
