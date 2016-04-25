@@ -2,6 +2,8 @@ var express = require('express');
 var multer  = require('multer');
 var jade = require('jade');
 var fs = require('fs');
+var gm = require('gm');
+
 // var PDFDocument=require ('pdfkit');
 const exec = require('child_process').exec;
 
@@ -30,7 +32,6 @@ var printRandomFile=function(){
   fs.readdir("public/qr", function(err,files){
     filesNumber=files.length;
     var randomfile=Math.round((Math.random() * files.length-1));
-    console.log(files);
     printFile("public/qr/"+files[randomfile]);
   })
 }
@@ -52,12 +53,28 @@ var createPDF=function(imagePath){
   layout: 'portrait',
   size: [1200, 1800] // a smaller document for small badge printers
 });
-  doc.pipe (fs.createWriteStream('public/qr/'+imagePath+'.pdf'));
 
-   doc.image("public/uploads/"+imagePath, 0, 0, {width: 1200});
-   doc.image("public/assets/emojii.png", 10, 500);
+//var newImg= fs.createWriteStream("public/uploads/cropped_"+imagePath);
 
-   doc.end();
+gm("public/uploads/"+imagePath)
+  .resize('1200', '1200', '^')
+  .gravity('Center')
+  .crop('1200', '1200')
+  .write("public/uploads/scaled_"+imagePath, function (err) {
+    if (err) {
+      console.log(err);
+    }
+    doc.pipe (fs.createWriteStream('public/qr/'+imagePath+'.pdf'));
+
+     doc.image("public/uploads/scaled_"+imagePath, 0, 0, {width: 1200});
+     doc.image("public/assets/emojii.png", 10, 1150);
+
+     doc.end();
+
+
+  });
+
+
 
 }
 
@@ -95,7 +112,6 @@ app.post('/api/photo',function(req,res){
         if(err) {
             return res.end("Error uploading file.");
         }
-
         printRandomFile();
         showRandomFile(req, res);
         console.log(req.file.filename);
