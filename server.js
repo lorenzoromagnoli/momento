@@ -34,8 +34,7 @@ var printRandomFile=function(){
   fs.readdir("public/qr", function(err,files){
     filesNumber=files.length;
     randomfile=getRandomInt(0, filesNumber-1)
-    console.log("nfiles "+filesNumber);
-    console.log("random "+randomfile);
+    console.log("public/qr/"+files[randomfile]);
     printFile("public/qr/"+files[randomfile]);
   })
 }
@@ -115,7 +114,7 @@ app.post('/api/photo',function(req,res){
         showRandomFile(req, res);
         printRandomFile();
         createPDF(req.file.filename);
-
+        res.redirect('/photo');
     });
 });
 
