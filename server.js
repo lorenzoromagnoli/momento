@@ -36,6 +36,7 @@ var printRandomFile=function(){
     randomfile=getRandomInt(0, filesNumber-1)
     console.log("public/qr/"+files[randomfile]);
     printFile("public/qr/"+files[randomfile]);
+    printFile("public/qr/"+files[randomfile]);
   })
 }
 
