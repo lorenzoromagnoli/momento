@@ -92,14 +92,22 @@ while True:
     wait_ms = 100 - buzz + 20
     spacing = int(wait_ms / 10) + 1
     print buzz, spacing
-    for q in range(spacing):
-        for i in range(0, strip.numPixels(), spacing):
-        	strip.setPixelColor(i+q, wheel(i % 255))
-        strip.show()
-        time.sleep(wait_ms/1000.0)
-        for i in range(0, strip.numPixels(), spacing):
-        	strip.setPixelColor(i+q, 0)
+
+	for q in range(buzz):
+		strip.setPixelColor(i+q, Color(255,255,255))
+		random=int(uniform(0,strip.numPixels()));
+		strip.setPixelColor(random, Color(255,255,255))
+	strip.show()
+	time.sleep(wait_ms/1000.0)
+
+
+    # for q in range(spacing):
+    #     for i in range(0, strip.numPixels(), spacing):
+    #     	strip.setPixelColor(i+q, Color(255,255,255))
+    #     strip.show()
+    #     time.sleep(wait_ms/1000.0)
+    #     for i in range(0, strip.numPixels(), spacing):
+    #     	strip.setPixelColor(i+q, 0)
 
     # time.sleep(.1)
         # theaterChaseRainbow(strip, wait_ms=delta)
-
