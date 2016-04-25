@@ -3,6 +3,17 @@ var multer  = require('multer');
 var jade = require('jade');
 var fs = require('fs');
 var gm = require('gm');
+var http = require('http');
+
+var querystring = require('querystring');
+
+var intensity;
+
+fs.readdir("public/uploads", function(err,files){
+  filesNumber=files.length;
+  intensity=filesNumber;
+})
+
 
 // var PDFDocument=require ('pdfkit');
 const exec = require('child_process').exec;
@@ -116,6 +127,8 @@ app.post('/api/photo',function(req,res){
         printRandomFile();
         createPDF(req.file.filename);
         res.redirect('/photo');
+        intensity++;
+        PostCode(intensity);
     });
 });
 
@@ -132,14 +145,44 @@ var printFile=function(filename){
   });
 }
 
-var blinkLed=function(){
-  leds.fill(0xFF, 255, 0x00);
-  leds.update();
-  setTimeout(function(){
-    leds.fill(0x00, 0x00, 0x00);
-    leds.update();
-  },2000);
+
+function PostCode(intensity) {
+  // Build the post string from an object
+  var post_data = querystring.stringify({
+        'buzz' : intensity
+  });
+
+  // An object of options to indicate where to post to
+  var post_options = {
+      host: '127.0.0.1',
+      port: '3001',
+      path: '/',
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': Buffer.byteLength(post_data)
+      }
+  };
+
+  // Set up the request
+  var post_req = http.request(post_options, function(res) {
+      res.setEncoding('utf8');
+      res.on('data', function (chunk) {
+          console.log('Response: ' + chunk);
+      });
+  });
+
+  // post the data
+  try{
+    post_req.write(post_data);
+    post_req.end();
+  }
+  catch (e) {
+    console.log(e);
+  }
 }
+
+
 
 
 

@@ -1,9 +1,6 @@
-npm install -g node-gyp
-npm install printer --msvs_version=2013
 
 install guteprint
 'sudo apt-get install printer-driver-gutenprint'
-
 
 # for neopixels
 # as per https://learn.adafruit.com/neopixels-on-raspberry-pi/software
@@ -14,3 +11,9 @@ cd rpi_ws281x
 scons
 cd python
 sudo python setup.py install
+
+install graphicsmagick
+sudo apt-get install graphicsmagick
+
+install canvas dependencies
+sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
