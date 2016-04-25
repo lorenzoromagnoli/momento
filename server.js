@@ -112,11 +112,9 @@ app.post('/api/photo',function(req,res){
         if(err) {
             return res.end("Error uploading file.");
         }
-        printRandomFile();
         showRandomFile(req, res);
-        console.log(req.file.filename);
-        var filename=req.file.filename;
-        createPDF(filename);
+        printRandomFile();
+
     });
 });
 
