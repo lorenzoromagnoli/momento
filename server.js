@@ -19,23 +19,30 @@ var QRCode = require('qrcode');
 
 PDFDocument = require ('pdfkit')
 
-
+var randomfile=getRandomInt(0, 15)
 
 var showRandomFile=function(req, res){
   fs.readdir("public/uploads", function(err,files){
     filesNumber=files.length;
-    var randomfile=Math.round((Math.random() * files.length-1));
+    randomfile=getRandomInt(0, filesNumber-1)
+    console.log("nfiles "+filesNumber);
+    console.log("random "+randomfile);
     res.render('getData',{ image: files[randomfile] });
   })
 }
 var printRandomFile=function(){
   fs.readdir("public/qr", function(err,files){
     filesNumber=files.length;
-    var randomfile=Math.round((Math.random() * files.length-1));
+    randomfile=getRandomInt(0, filesNumber-1)
+    console.log("nfiles "+filesNumber);
+    console.log("random "+randomfile);
     printFile("public/qr/"+files[randomfile]);
   })
 }
 
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, './public/uploads');
@@ -48,7 +55,6 @@ var upload = multer({ storage : storage}).single('userPhoto');
 
 
 var createPDF=function(imagePath){
-
   doc = new PDFDocument({
   layout: 'portrait',
   size: [1200, 1800] // a smaller document for small badge printers
@@ -68,14 +74,8 @@ gm("public/uploads/"+imagePath)
 
      doc.image("public/uploads/scaled_"+imagePath, 0, 0, {width: 1200});
      doc.image("public/assets/emojii.png", 10, 1150);
-
      doc.end();
-
-
   });
-
-
-
 }
 
 
@@ -114,6 +114,7 @@ app.post('/api/photo',function(req,res){
         }
         showRandomFile(req, res);
         printRandomFile();
+        createPDF(req.file.filename);
 
     });
 });
